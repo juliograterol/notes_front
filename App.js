@@ -13,8 +13,8 @@ function AppNavigation() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Todas las Notas">
         <Stack.Screen name="Todas las Notas" component={AllNotes} />
-        <Stack.Screen name="Nota" component={NotaPrueba} />{" "}
-        <Stack.Screen name="Carpeta1" component={FolderView} />{" "}
+        <Stack.Screen name="Nota" component={NotaPrueba} />
+        <Stack.Screen name="Carpeta1" component={FolderView} />
         <Stack.Screen name="Todas las Carpetas" component={AllFolders} />
       </Stack.Navigator>
     </NavigationContainer>
