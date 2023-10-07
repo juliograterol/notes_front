@@ -1,19 +1,52 @@
-import React from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Modal, TouchableOpacity, Text } from "react-native";
+import ButtonComponent from "../components/ButtonComponent";
 
 const PantallaPrincipal = ({ navigation }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const showModal = () => {
+    setModalVisible(true);
+  };
+
+  const hideModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("Todas las Notas")}
-      >
-        <Image
-          source={require("../assets/Note.png")} // Ruta de la imagen
-          style={styles.imagen}
-        />
-        <Text>Todas las Notas</Text>
+      <TouchableOpacity onPress={showModal}>
+        <Text>Menu</Text>
       </TouchableOpacity>
+
+      <Modal visible={modalVisible} transparent animationType="slide">
+        <View style={styles.modalContainer}>
+          <ButtonComponent
+            onPress={() => {
+              navigation.navigate("Todas las Notas");
+              hideModal();
+            }}
+            imageSource={require("../assets/Note.png")}
+            buttonText="Todas las Notas"
+          />
+          <ButtonComponent
+            onPress={() => {
+              navigation.navigate("Todas las Carpetas");
+              hideModal();
+            }}
+            imageSource={require("../assets/Folder.png")}
+            buttonText="Todas las Carpetas"
+          />
+          <ButtonComponent
+            // onPress={() => navigation.navigate("Todas las Notas")}
+            imageSource={require("../assets/Trash.png")}
+            buttonText="Papelera"
+          />
+          <TouchableOpacity onPress={hideModal}>
+            <Text style={styles.closeButton}>Cerrar</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -23,17 +56,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#312D4E",
   },
-  imagen: {
-    width: 75, // Ancho de la imagen
-    height: 75, // Altura de la imagen
-    resizeMode: "contain", // Ajuste de la imagen (puedes usar 'cover', 'contain', etc.)
-  },
-  button: {
+  modalContainer: {
     flex: 1,
-    borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#312D4E",
+    color: "white",
+  },
+  closeButton: {
+    marginTop: 20,
+    color: "white",
+    fontSize: 18,
   },
 });
 

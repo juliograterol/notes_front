@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TextInput } from "react-native";
 import ButtonComponent from "../components/ButtonComponent";
 
-const AllNotes = ({ navigation }) => {
+const FolderView = ({ navigation }) => {
   return (
     <View>
       <ButtonComponent
@@ -14,4 +14,4 @@ const AllNotes = ({ navigation }) => {
   );
 };
 
-export default AllNotes;
+export default FolderView;
