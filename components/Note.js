@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
   },
   noteTitle: {
     fontSize: 25,
+    borderBottomColor: "#a0a0a0",
   },
   note: {},
 });
