@@ -5,8 +5,8 @@ const AddButton = ({ onPress }) => {
   const styles = StyleSheet.create({
     button: {
       position: "absolute",
-      right: 0,
-      bottom: 0,
+      right: 15,
+      bottom: 15,
     },
     imagen: {
       opacity: 0.9,

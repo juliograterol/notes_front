@@ -9,38 +9,49 @@ const AllNotes = ({ navigation }) => {
 
   // Función para agregar un elemento a la vista
   const addNote = () => {
+    const i = notes.length + 1;
     const newNote = (
       <ButtonComponent
-        onPress={() => navigation.navigate("Nota")}
+        color={"#ffffff25"}
+        onPress={() => navigation.navigate(`Nota`)}
         imageSource={require("../assets/Note.png")}
-        buttonText="Nota"
+        buttonText={`Nota ${i}`}
       />
     );
     setNotes([...notes, newNote]);
   };
 
   return (
-    <View>
+    <>
       <Menu navigation={navigation} />
-      <View style={styles.container}>
-        {notes.map((note, index) => (
-          <View key={index}>{note}</View>
-        ))}
+      <View
+        style={{
+          alignItems: "center",
+          height: "100%",
+        }}
+      >
+        <View style={styles.container}>
+          {notes.map((note, index) => (
+            <View key={index} style={{ margin: 5, width: "30%" }}>
+              {note}
+            </View>
+          ))}
+        </View>
       </View>
       <AddButton onPress={addNote} />
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    width: "100%",
     flexDirection: "row",
     flexWrap: "wrap",
     padding: 10,
     borderRadius: 5,
-    justifyContent: "space-evenly",
     alignItems: "flex-start",
-    backgroundColor: "#ffffff25",
+    backgroundColor: "green",
   },
 });
 
