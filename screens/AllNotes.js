@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import ButtonComponent from "../components/ButtonComponent";
 import Menu from "../components/Menu";
 import AddButton from "../components/Add";
 
 const AllNotes = ({ navigation }) => {
-  const [notes, setNotes] = useState([]); // Estado para mantener los elementos
+  const [notes, setNotes] = useState([]);
+  const [currentDisplay, setDisplay] = useState("Grid");
 
   // Función para agregar un elemento a la vista
   const addNote = () => {
@@ -21,9 +22,23 @@ const AllNotes = ({ navigation }) => {
     setNotes([...notes, newNote]);
   };
 
+  const changeDisplay = () => {
+    currentDisplay === "Grid"
+      ? setDisplay("List")
+      : currentDisplay === "List"
+      ? setDisplay("Grid")
+      : null;
+  };
+
   return (
     <>
       <Menu navigation={navigation} />
+      <TouchableOpacity
+        style={{ position: "absolute", right: 5 }}
+        onPress={changeDisplay}
+      >
+        <Text style={{ fontSize: 30 }}>View {currentDisplay}</Text>
+      </TouchableOpacity>
       <View
         style={{
           alignItems: "center",
@@ -32,7 +47,13 @@ const AllNotes = ({ navigation }) => {
       >
         <View style={styles.container}>
           {notes.map((note, index) => (
-            <View key={index} style={{ margin: 5, width: "30%" }}>
+            <View
+              key={index}
+              style={{
+                margin: 5,
+                width: currentDisplay === "List" ? "90%" : "30%",
+              }}
+            >
               {note}
             </View>
           ))}
@@ -51,7 +72,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     alignItems: "flex-start",
-    backgroundColor: "green",
+    backgroundColor: "#c0c0c0",
   },
 });
 
