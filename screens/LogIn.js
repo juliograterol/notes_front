@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
     position: "absolute",
     right: 0,
-    height: 25,
+    height: 20,
     resizeMode: "contain",
   },
 });
