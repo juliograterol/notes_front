@@ -1,98 +1,107 @@
 import React, { useEffect, useState } from "react";
 import {
+  Image,
   View,
   Text,
   TextInput,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import useFetch from "../hooks/useFetch";
 
-const Login = () => {
-  const [user, setUser] = useState("");
-  const [password, setPassword] = useState("");
-
-  const { data, error, fetchData } = useFetch(
-    "http://192.168.0.161:3003/auth/login"
-  );
-
-  useEffect(() => {
-    if (data) {
-      console.log(data);
-    }
-    if (error) {
-      console.log(error);
-    }
-  }, [data]);
-
-  async function handleClick() {
-    await fetchData("POST", {
-      email: user,
-      password: password,
-    });
-    console.log("post");
-  }
+const Login = (props) => {
+  const [isVisible, setVisible] = useState(false);
 
   function handleUserChange(text) {
-    setUser(text);
+    props.setUser(text);
   }
 
   function handlePasswordChange(text) {
-    setPassword(text);
+    props.setPassword(text);
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.box}>
+    <View style={styles.page}>
+      <Text style={styles.credits}>Highlight Notes</Text>
+      <View style={styles.container}>
         <Text style={styles.title}>Iniciar Sesión</Text>
         <TextInput
           style={styles.placeholder}
           placeholder="Usuario"
           onChangeText={handleUserChange}
         />
-        <TextInput
-          style={styles.placeholder}
-          placeholder="Contraseña"
-          onChangeText={handlePasswordChange}
-        />
-        <TouchableOpacity style={styles.button} onPress={() => handleClick()}>
-          <Text style={{ fontWeight: "bold", color: "white" }}>
+        <View style={styles.placeholder}>
+          <TextInput
+            placeholder="Contraseña"
+            onChangeText={handlePasswordChange}
+            secureTextEntry={!isVisible}
+          />
+          <TouchableOpacity
+            onPress={() => setVisible(!isVisible)}
+            style={styles.eye}
+          >
+            <Image source={require("../assets/eye.png")} style={styles.eye} />
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => props.handleClick()}
+        >
+          <Text style={{ fontWeight: "bold", color: "white", fontSize: 25 }}>
             Iniciar Sesión
           </Text>
         </TouchableOpacity>
         <View>
-          <Text>No tengo cuenta,</Text>
           <TouchableOpacity>
-            <Text> Crear Cuenta</Text>
+            <Text
+              style={{ textAlign: "center", textDecorationLine: "underline" }}
+            >
+              Olvidé mi contraseña
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Text style={{ textAlign: "center" }}>
+              No tengo cuenta,{" "}
+              <Text style={{ textDecorationLine: "underline" }}>
+                Crear Cuenta
+              </Text>
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
+      <Text style={styles.credits}>
+        Developed by{"\n"}Julio Graterol & Victor Kneider
+      </Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  page: {
     padding: 10,
     height: "100%",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#312D4E",
   },
-  box: {
-    borderRadius: 5,
+  container: {
     padding: 25,
+    width: "80%",
+    borderRadius: 5,
+    justifyContent: "space-between",
     backgroundColor: "#fff",
   },
   title: {
-    fontSize: 25,
+    fontSize: 40,
+    textAlign: "center",
     fontWeight: "bold",
   },
   placeholder: {
+    justifyContent: "center",
+    padding: 5,
     fontSize: 15,
     margin: 5,
     borderRadius: 5,
-    backgroundColor: "#a0a0a0",
+    backgroundColor: "#c0c0c0",
   },
   button: {
     margin: 5,
@@ -101,6 +110,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "black",
+  },
+  credits: {
+    margin: 50,
+    fontSize: 20,
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  eye: {
+    opacity: 0.5,
+    position: "absolute",
+    right: 0,
+    height: 25,
+    resizeMode: "contain",
   },
 });
 
