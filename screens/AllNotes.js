@@ -6,6 +6,7 @@ import AddButton from "../components/Add";
 import Note from "../components/Note";
 import useFetch from "../hooks/useFetch";
 import useId from "../hooks/useId";
+import { API_URL } from "../config"; // Importa la variable de entorno
 
 const AllNotes = ({ navigation }) => {
   const [notes, setNotes] = useState([]);
@@ -15,9 +16,7 @@ const AllNotes = ({ navigation }) => {
   const [noteTitle, setTitle] = useState("");
   const [noteDescription, setDescription] = useState("");
 
-  const { data, error, loading, fetchData } = useFetch(
-    "http://192.168.0.161:3003/notes/"
-  );
+  const { data, error, loading, fetchData } = useFetch(`${API_URL}/notes/`);
 
   useEffect(() => {
     async function fetchNotes() {

@@ -8,6 +8,7 @@ import FolderView from "./screens/FolderView";
 import Login from "./screens/LogIn";
 import useFetch from "./hooks/useFetch";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_URL } from "./config"; // Importa la variable de entorno
 
 const Stack = createStackNavigator();
 
@@ -17,9 +18,7 @@ function App() {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
 
-  const { data, error, loading, fetchData } = useFetch(
-    `http://192.168.0.161:3003/auth/login`
-  );
+  const { data, error, loading, fetchData } = useFetch(`${API_URL}/auth/login`);
 
   async function UserLog(data) {
     await AsyncStorage.setItem("jwt", data.token);
