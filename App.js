@@ -18,7 +18,7 @@ function App() {
   const [password, setPassword] = useState("");
 
   const { data, error, loading, fetchData } = useFetch(
-    "http://192.168.3.118:3003/auth/login"
+    `http://192.168.0.161:3003/auth/login`
   );
 
   async function UserLog(data) {
