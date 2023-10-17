@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import ButtonComponent from "../components/ButtonComponent";
 import Menu from "../components/Menu";
 import AddButton from "../components/Add";
 import Note from "../components/Note";
+import useFetch from "../hooks/useFetch";
+import useId from "../hooks/useId";
 
 const AllNotes = ({ navigation }) => {
   const [notes, setNotes] = useState([]);
@@ -12,6 +14,26 @@ const AllNotes = ({ navigation }) => {
 
   const [noteTitle, setTitle] = useState("");
   const [noteDescription, setDescription] = useState("");
+
+  const { data, error, loading, fetchData } = useFetch(
+    "http://192.168.3.118:3003/notes/"
+  );
+
+  useEffect(() => {
+    async function fetchNotes() {
+      const { token, userId } = await useId();
+      console.log(token);
+      console.log(userId);
+      await fetchData("GET", { id: userId, token: token });
+    }
+    fetchNotes();
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+    }
+  }, [data]);
 
   const testFunction = () => {
     setTitle("Hola");

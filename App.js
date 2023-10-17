@@ -7,11 +7,12 @@ import AllFolders from "./screens/AllFolders";
 import FolderView from "./screens/FolderView";
 import Login from "./screens/LogIn";
 import useFetch from "./hooks/useFetch";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createStackNavigator();
 
 function App() {
-  const [isLogged, setLog] = useState(true);
+  const [isLogged, setLog] = useState(false);
 
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
@@ -20,8 +21,13 @@ function App() {
     "http://192.168.3.118:3003/auth/login"
   );
 
+  async function UserLog(data) {
+    await AsyncStorage.setItem("jwt", data.token);
+  }
+
   useEffect(() => {
     if (data) {
+      UserLog();
       console.log(data);
       setLog(true);
       if (isLogged) {

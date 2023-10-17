@@ -5,7 +5,7 @@ const useFetch = (url) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
-  const fetchData = async (method, body) => {
+  const fetchData = async (method, body, token) => {
     try {
       setLoading(true);
       const options = {
@@ -17,6 +17,10 @@ const useFetch = (url) => {
 
       if (body) {
         options.body = JSON.stringify(body);
+      }
+
+      if (token) {
+        options.headers["Authorization"] = `Bearer ${token}`;
       }
       const response = await fetch(url, options);
       const responseData = await response.json();
