@@ -11,13 +11,13 @@ import useFetch from "./hooks/useFetch";
 const Stack = createStackNavigator();
 
 function App() {
-  const [isLogged, setLog] = useState(false);
+  const [isLogged, setLog] = useState(true);
 
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
 
-  const { data, error, fetchData } = useFetch(
-    "http://192.168.0.222:3003/auth/login"
+  const { data, error, loading, fetchData } = useFetch(
+    "http://192.168.3.118:3003/auth/login"
   );
 
   useEffect(() => {
