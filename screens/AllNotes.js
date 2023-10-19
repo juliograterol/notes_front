@@ -13,8 +13,12 @@ const AllNotes = ({ navigation }) => {
   const [currentDisplay, setDisplay] = useState("Grid");
   const [openNote, setOpenNote] = useState(false);
 
-  const [noteTitle, setTitle] = useState("");
-  const [noteDescription, setDescription] = useState("");
+  const [noteData, setNoteData] = useState({
+    title: "",
+    description: "",
+    color: "white", // Valor predeterminado para el color
+    id: "",
+  });
 
   const { data, error, loading, fetchData } = useFetch(
     `${API_URL}/note/getAll`
@@ -41,9 +45,15 @@ const AllNotes = ({ navigation }) => {
         <ButtonComponent
           key={note.id} // Agrega una clave única
           color={note.color}
+          noteDisplay={currentDisplay}
+          buttonDescription={note.description}
           onPress={() => {
-            setTitle(note.title);
-            setDescription(note.description);
+            setNoteData({
+              title: note.title,
+              description: note.description,
+              color: note.color,
+              id: note._id,
+            });
             setOpenNote(true);
           }}
           imageSource={require("../assets/Note.png")}
@@ -61,8 +71,11 @@ const AllNotes = ({ navigation }) => {
 
   // Función para agregar un elemento a la vista
   const addNote = () => {
-    setTitle("");
-    setDescription("");
+    setNoteData({
+      title: "",
+      description: "",
+      color: "white",
+    });
     setOpenNote(true);
   };
 
@@ -78,8 +91,10 @@ const AllNotes = ({ navigation }) => {
     <>
       {openNote ? (
         <Note
-          noteTitle={noteTitle}
-          noteDescription={noteDescription}
+          noteTitle={noteData.title}
+          noteDescription={noteData.description}
+          noteColor={noteData.color}
+          noteId={noteData.id}
           toClose={setOpenNote}
         ></Note>
       ) : (

@@ -1,7 +1,14 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
-const ButtonComponent = ({ onPress, imageSource, buttonText, color }) => {
+const ButtonComponent = ({
+  onPress,
+  imageSource,
+  buttonText,
+  color,
+  noteDisplay,
+  buttonDescription,
+}) => {
   const styles = StyleSheet.create({
     container: {
       padding: 10,
@@ -11,17 +18,22 @@ const ButtonComponent = ({ onPress, imageSource, buttonText, color }) => {
       backgroundColor: color,
     },
     imagen: {
-      opacity: 0.9,
       width: 75,
       height: 75,
       resizeMode: "contain",
+    },
+    title: {
+      fontWeight: "bold",
     },
   });
 
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <Image source={imageSource} style={styles.imagen} />
-      <Text>{buttonText}</Text>
+      <Text style={styles.title} numberOfLines={2}>
+        {buttonText}
+      </Text>
+      <Text numberOfLines={1}>{buttonDescription}</Text>
     </TouchableOpacity>
   );
 };
