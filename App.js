@@ -26,7 +26,7 @@ function App() {
 
   useEffect(() => {
     if (data) {
-      UserLog();
+      UserLog(data);
       console.log(data);
       setLog(true);
       if (isLogged) {

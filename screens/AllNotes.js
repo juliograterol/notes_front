@@ -16,45 +16,54 @@ const AllNotes = ({ navigation }) => {
   const [noteTitle, setTitle] = useState("");
   const [noteDescription, setDescription] = useState("");
 
-  const { data, error, loading, fetchData } = useFetch(`${API_URL}/notes/`);
+  const { data, error, loading, fetchData } = useFetch(
+    `${API_URL}/note/getAll`
+  );
 
   useEffect(() => {
     async function fetchNotes() {
-      const { token, userId } = await useId();
-      console.log(token);
-      console.log(userId);
-      await fetchData("GET", { id: userId, token: token });
+      const idData = await useId();
+      if (idData && idData.token) {
+        const { userId, token } = idData;
+        // Ahora puedes utilizar userId y token para hacer la solicitud
+        await fetchData("POST", { userId: userId }, token);
+      }
     }
-    fetchNotes();
+    if (!loading) {
+      fetchNotes();
+    }
   }, []);
 
   useEffect(() => {
     if (data) {
-      console.log(data);
-    }
-  }, [data]);
+      // Mapea las notas en un nuevo array
+      const newNotes = data.notes.map((note) => (
+        <ButtonComponent
+          key={note.id} // Agrega una clave única
+          color={note.color}
+          onPress={() => {
+            setTitle(note.title);
+            setDescription(note.description);
+            setOpenNote(true);
+          }}
+          imageSource={require("../assets/Note.png")}
+          buttonText={note.title}
+        />
+      ));
 
-  const testFunction = () => {
-    setTitle("Hola");
-    setDescription("Esta es la nota");
-    setOpenNote(true);
-  };
+      // Actualiza el estado de 'notes' con el nuevo array de notas
+      setNotes(newNotes);
+    }
+    if (error) {
+      console.log(`Error: ${error}`);
+    }
+  }, [data, error]);
 
   // Función para agregar un elemento a la vista
   const addNote = () => {
     setTitle("");
     setDescription("");
     setOpenNote(true);
-    const i = notes.length + 1;
-    const newNote = (
-      <ButtonComponent
-        color={"#ffffff25"}
-        onPress={() => testFunction()}
-        imageSource={require("../assets/Note.png")}
-        buttonText={`Nota ${i}`}
-      />
-    );
-    setNotes([...notes, newNote]);
   };
 
   const changeDisplay = () => {
@@ -94,7 +103,7 @@ const AllNotes = ({ navigation }) => {
                   key={index}
                   style={{
                     margin: 5,
-                    width: currentDisplay === "List" ? "90%" : "30%",
+                    width: currentDisplay === "List" ? "98%" : "30%",
                   }}
                 >
                   {note}
@@ -117,7 +126,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     alignItems: "flex-start",
-    backgroundColor: "#cfcfcf",
   },
 });
 
