@@ -50,28 +50,30 @@ const Note = ({
   });
 
   async function saveNote() {
-    const idData = await useId();
-    if (idData && idData.token) {
-      noteId === undefined
-        ? await fetchData(
-            "POST",
-            {
-              title: currentNoteData.title,
-              description: currentNoteData.description,
-              userId: idData.userId,
-            },
-            idData.token
-          )
-        : await fetchData(
-            "PUT",
-            {
-              noteId: noteId,
-              title: currentNoteData.title,
-              description: currentNoteData.description,
-              userId: idData.userId,
-            },
-            idData.token
-          );
+    if (!loading) {
+      const idData = await useId();
+      if (idData && idData.token) {
+        noteId === undefined
+          ? await fetchData(
+              "POST",
+              {
+                title: currentNoteData.title,
+                description: currentNoteData.description,
+                userId: idData.userId,
+              },
+              idData.token
+            )
+          : await fetchData(
+              "PUT",
+              {
+                noteId: noteId,
+                title: currentNoteData.title,
+                description: currentNoteData.description,
+                userId: idData.userId,
+              },
+              idData.token
+            );
+      }
     }
   }
 
@@ -87,7 +89,7 @@ const Note = ({
   return (
     <View style={styles.noteContainer}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => toClose(false)}>
+        <TouchableOpacity onPress={toClose}>
           <Image
             style={{ marginRight: 10 }}
             source={require("../assets/left-arrow.png")}

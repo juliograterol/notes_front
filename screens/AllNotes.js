@@ -24,15 +24,15 @@ const AllNotes = ({ navigation }) => {
     `${API_URL}/note/getAll`
   );
 
-  useEffect(() => {
-    async function fetchNotes() {
-      const idData = await useId();
-      if (idData && idData.token) {
-        const { userId, token } = idData;
-        // Ahora puedes utilizar userId y token para hacer la solicitud
-        await fetchData("POST", { userId: userId }, token);
-      }
+  async function fetchNotes() {
+    const idData = await useId();
+    if (idData && idData.token) {
+      const { userId, token } = idData;
+      // Ahora puedes utilizar userId y token para hacer la solicitud
+      await fetchData("POST", { userId: userId }, token);
     }
+  }
+  useEffect(() => {
     if (!loading) {
       fetchNotes();
     }
@@ -45,7 +45,6 @@ const AllNotes = ({ navigation }) => {
         <ButtonComponent
           key={note.id} // Agrega una clave única
           color={note.color}
-          noteDisplay={currentDisplay}
           buttonDescription={note.description}
           onPress={() => {
             setNoteData({
@@ -95,7 +94,10 @@ const AllNotes = ({ navigation }) => {
           noteDescription={noteData.description}
           noteColor={noteData.color}
           noteId={noteData.id}
-          toClose={setOpenNote}
+          toClose={() => {
+            setOpenNote(false);
+            fetchNotes();
+          }}
         ></Note>
       ) : (
         <>

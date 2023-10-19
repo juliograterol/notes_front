@@ -55,8 +55,12 @@ function App() {
         />
       ) : (
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Todas las Notas">
-            <Stack.Screen name="Login" component={Login} />
+          <Stack.Navigator
+            initialRouteName="Todas las Notas"
+            screenOptions={{
+              headerTitleStyle: { color: "transparent", fontSize: 0 },
+            }}
+          >
             <Stack.Screen name="Todas las Notas" component={AllNotes} />
             <Stack.Screen name="Nota" component={NotaPrueba} />
             <Stack.Screen name="Carpeta1" component={FolderView} />

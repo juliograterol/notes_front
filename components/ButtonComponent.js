@@ -6,7 +6,6 @@ const ButtonComponent = ({
   imageSource,
   buttonText,
   color,
-  noteDisplay,
   buttonDescription,
 }) => {
   const styles = StyleSheet.create({
