@@ -133,10 +133,20 @@ const AllFolders = ({ navigation }) => {
                   <View
                     key={index}
                     style={{
-                      margin: currentDisplay === "List" ? 0 : 5,
+                      margin:
+                        currentDisplay === "List"
+                          ? 0
+                          : notes.length > 1
+                          ? 5
+                          : 0,
                       marginTop: currentDisplay === "List" ? 5 : 5,
                       marginBottom: currentDisplay === "List" ? 5 : 5,
-                      width: currentDisplay === "List" ? "100%" : "47%",
+                      width:
+                        notes.length > 1
+                          ? currentDisplay === "List"
+                            ? "100%"
+                            : "47%"
+                          : "100%",
                     }}
                   >
                     {folder}

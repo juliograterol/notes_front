@@ -11,6 +11,7 @@ import useFetch from "../hooks/useFetch";
 import { API_URL } from "../config";
 import { useEffect, useState } from "react";
 import useId from "../hooks/useId";
+import CloseButton from "./Close";
 
 const ChangeFolderOption = ({
   name,
@@ -111,9 +112,7 @@ const FolderModal = ({ modalVisible, noteId, toClose }) => {
           {allFoldersOptions.map((folder) => (
             <>{folder}</>
           ))}
-          <TouchableOpacity onPress={toClose}>
-            <Text>Cerrar</Text>
-          </TouchableOpacity>
+          <CloseButton onPress={toClose} />
         </View>
       </Modal>
     </View>
@@ -122,7 +121,7 @@ const FolderModal = ({ modalVisible, noteId, toClose }) => {
 
 const styles = StyleSheet.create({
   modal: {
-    backgroundColor: "#f1f1f1",
+    backgroundColor: "#e1e1e1",
     height: "100%",
   },
 });

@@ -14,6 +14,7 @@ function AppNavigation() {
         <Stack.Screen name="Menu" component={PantallaPrincipal} />
         <Stack.Screen name="Todas las Notas" component={PantallaDetalle} />
         <Stack.Screen name="Papelera" component={Trash} />
+        <Stack.Screen name="Cuenta" component={User} />
       </Stack.Navigator>
     </NavigationContainer>
   );
