@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import PantallaPrincipal from "./screens/PantallaPrincipal"; // Importa tus pantallas
 import PantallaDetalle from "./screens/AllNotes";
-import NotaPrueba from "./screens/NotaView";
+import Trash from "./screens/Trash";
 
 const Stack = createStackNavigator();
 

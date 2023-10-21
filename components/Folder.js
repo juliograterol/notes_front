@@ -31,7 +31,7 @@ const Folder = ({ folderId, folderName, toClose }) => {
   });
 
   const { data, error, loading, fetchData } = useFetch(
-    `${API_URL}/note/getAll`
+    `${API_URL}/note/getByFolderId`
   );
 
   async function fetchNotes() {
@@ -39,7 +39,7 @@ const Folder = ({ folderId, folderName, toClose }) => {
     if (idData && idData.token) {
       const { userId, token } = idData;
       // Ahora puedes utilizar userId y token para hacer la solicitud
-      await fetchData("POST", { userId: userId }, token);
+      await fetchData("POST", { userId: userId, folderId: folderId }, token);
     }
   }
   useEffect(() => {
@@ -50,10 +50,7 @@ const Folder = ({ folderId, folderName, toClose }) => {
 
   useEffect(() => {
     if (data) {
-      const filteredNotes = data.notes.filter(
-        (note) => note.folderId === folderId
-      );
-      const newNotes = filteredNotes.map((note) => (
+      const newNotes = data.notes.map((note) => (
         <ButtonComponent
           key={note.id} // Agrega una clave única
           color={note.color}
@@ -79,8 +76,6 @@ const Folder = ({ folderId, folderName, toClose }) => {
           }
         />
       ));
-
-      // Actualiza el estado de 'notes' con el nuevo array de notas
       setNotes(newNotes);
     }
     if (error) {

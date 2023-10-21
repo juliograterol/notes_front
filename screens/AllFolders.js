@@ -99,7 +99,7 @@ const AllFolders = ({ navigation }) => {
         <>
           <Folder
             folderName={folderData.name}
-            folderiD={folderData.id}
+            folderId={folderData.id}
             toClose={() => {
               setOpenFolder(false);
               fetchNotes();

@@ -8,7 +8,6 @@ async function useId() {
     if (savedToken) {
       const decodedToken = jwtDecode(savedToken);
       const userId = decodedToken.id;
-      console.log(savedToken);
       return { token: savedToken, userId: userId };
     }
   } catch (error) {
