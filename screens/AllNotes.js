@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import ButtonComponent from "../components/ButtonComponent";
 import Menu from "../components/Menu";
 import AddButton from "../components/Add";
@@ -42,10 +48,9 @@ const AllNotes = ({ navigation }) => {
 
   useEffect(() => {
     if (data) {
-      const filteredNotes = data.notes.filter((note) => !note.trashed);
+      const filteredNotes = data.notes.filter((note) => note.trashed === true);
       const newNotes = filteredNotes.map((note) => (
         <ButtonComponent
-          starredNote={note.starred}
           key={note.id} // Agrega una clave única
           color={note.color}
           buttonDescription={note.description}
@@ -137,22 +142,24 @@ const AllNotes = ({ navigation }) => {
           <View
             style={{
               alignItems: "center",
-              height: "100%",
             }}
           >
-            <View style={styles.container}>
-              {notes.map((note, index) => (
-                <View
-                  key={index}
-                  style={{
-                    margin: currentDisplay === "List" ? 0 : 5,
-                    width: currentDisplay === "List" ? "100%" : "47%",
-                  }}
-                >
-                  {note}
-                </View>
-              ))}
-            </View>
+            <ScrollView>
+              <View style={styles.container}>
+                {notes.map((note, index) => (
+                  <View
+                    key={index}
+                    style={{
+                      margin: currentDisplay === "List" ? 0 : 5,
+                      width: currentDisplay === "List" ? "100%" : "47%",
+                    }}
+                  >
+                    {note}
+                  </View>
+                ))}
+              </View>
+              <View style={{ height: 500 }}></View>
+            </ScrollView>
           </View>
           <AddButton onPress={addNote} />
         </>
@@ -178,17 +185,16 @@ const styles = StyleSheet.create({
   },
   loading: {
     flex: 1,
-    width: "100%",
-    height: "100%",
-    backgroundColor: "grey",
-    zIndex: 100,
-    position: "absolute",
-    zIndex: 100,
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    height: 350,
+    backgroundColor: "rgba(0, 0, 0, 0.7)", // Fondo oscuro con un poco de transparencia
+    position: "absolute",
     pointerEvents: "none",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 100,
   },
 });
 

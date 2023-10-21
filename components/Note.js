@@ -3,7 +3,7 @@ import {
   View,
   TouchableOpacity,
   Image,
-  Text,
+  Alert,
   TextInput,
   StyleSheet,
 } from "react-native";
@@ -52,27 +52,40 @@ const Note = ({
   async function saveNote() {
     if (!loading) {
       const idData = await useId();
-      if (idData && idData.token) {
-        noteId === undefined
-          ? await fetchData(
-              "POST",
-              {
-                title: currentNoteData.title,
-                description: currentNoteData.description,
-                userId: idData.userId,
-              },
-              idData.token
-            )
-          : await fetchData(
-              "PUT",
-              {
-                noteId: noteId,
-                title: currentNoteData.title,
-                description: currentNoteData.description,
-                userId: idData.userId,
-              },
-              idData.token
-            );
+      if (!currentNoteData.title || !currentNoteData.description) {
+        Alert.alert(
+          "Datos incompletos",
+          "Las notas deben tener titulo y descripcion para guardarse",
+          [
+            {
+              text: "Aceptar",
+            },
+          ]
+        );
+        return;
+      } else {
+        if (idData && idData.token) {
+          noteId === undefined
+            ? await fetchData(
+                "POST",
+                {
+                  title: currentNoteData.title,
+                  description: currentNoteData.description,
+                  userId: idData.userId,
+                },
+                idData.token
+              )
+            : await fetchData(
+                "PUT",
+                {
+                  noteId: noteId,
+                  title: currentNoteData.title,
+                  description: currentNoteData.description,
+                  userId: idData.userId,
+                },
+                idData.token
+              );
+        }
       }
     }
   }
@@ -85,6 +98,40 @@ const Note = ({
       console.log(`Error: ${error}`);
     }
   }, [data, error]);
+
+  function Alerta() {
+    noteId === undefined
+      ? Alert.alert("¿Desea crear esta nota?", "", [
+          {
+            text: "Cancelar",
+            style: "cancel",
+          },
+          {
+            text: "Crear",
+            onPress: () => {
+              saveNote();
+              Alert.alert("Nota Creada!", "", [
+                {
+                  text: "OK",
+                  onPress: toClose,
+                },
+              ]);
+            },
+          },
+        ])
+      : Alert.alert("¿Desea guardar los cambios esta nota?", "", [
+          {
+            text: "Cancelar",
+            style: "cancel",
+          },
+          {
+            text: "Guardar",
+            onPress: () => {
+              saveNote();
+            },
+          },
+        ]);
+  }
 
   return (
     <View style={styles.noteContainer}>
@@ -114,7 +161,7 @@ const Note = ({
       >
         {currentNoteData.description}
       </TextInput>
-      <SaveButton onPress={saveNote} />
+      <SaveButton onPress={Alerta} />
     </View>
   );
 };

@@ -4,10 +4,9 @@ import useId from "../hooks/useId";
 import { API_URL } from "../config";
 import { useEffect, useState } from "react";
 
-const NotesMenu = ({ noteId, trashed, starred, updateNotes }) => {
+const NotesMenu = ({ noteId, trashed, updateNotes }) => {
   const { data, error, loading, fetchData } = useFetch(`${API_URL}/note`);
   const [noteState, setNoteState] = useState({
-    starred: "true",
     trashed: "true",
   });
 
@@ -23,25 +22,6 @@ const NotesMenu = ({ noteId, trashed, starred, updateNotes }) => {
           {
             noteId: noteId,
             trashed: noteState.trashed,
-            userId: idData.userId,
-          },
-          idData.token
-        );
-      }
-    }
-  }
-  async function StarNote() {
-    starred
-      ? setNoteState({ ...noteState, starred: "false" })
-      : setNoteState({ ...noteState, starred: "true" });
-    const idData = await useId();
-    if (!loading) {
-      if (idData && idData.token) {
-        await fetchData(
-          "PUT",
-          {
-            noteId: noteId,
-            starred: noteState.starred,
             userId: idData.userId,
           },
           idData.token
@@ -125,30 +105,6 @@ const NotesMenu = ({ noteId, trashed, starred, updateNotes }) => {
             }
           >
             <Text>Delete</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              Alert.alert("¿Deseas poner en favoritos esta nota?", "", [
-                {
-                  text: "Cancelar",
-                  style: "cancel",
-                },
-                {
-                  text: "Aceptar",
-                  onPress: () => {
-                    StarNote();
-                    Alert.alert("Nota Favorita!", "", [
-                      {
-                        text: "OK",
-                        onPress: updateNotes,
-                      },
-                    ]);
-                  },
-                },
-              ]);
-            }}
-          >
-            {starred ? <Text>Remove Star</Text> : <Text>Star</Text>}
           </TouchableOpacity>
           <TouchableOpacity onPress={console.log("hola move to...")}>
             <Text>Move to...</Text>

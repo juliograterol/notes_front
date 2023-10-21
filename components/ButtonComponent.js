@@ -9,7 +9,6 @@ const ButtonComponent = ({
   color,
   buttonDescription,
   componentMenu,
-  starredNote,
 }) => {
   const styles = StyleSheet.create({
     container: {
@@ -53,15 +52,7 @@ const ButtonComponent = ({
             style={styles.options}
           />
         </TouchableOpacity>
-        <>
-          <Image source={imageSource} style={styles.imagen} />
-          {starredNote ? (
-            <Image
-              source={require("../assets/starred.png")}
-              style={styles.starred}
-            />
-          ) : null}
-        </>
+        <Image source={imageSource} style={styles.imagen} />
         <Text style={styles.title} numberOfLines={2}>
           {buttonText}
         </Text>

@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: 350,
-    pointerEvents: "none",
   },
 });
 
