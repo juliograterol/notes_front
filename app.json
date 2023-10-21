@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Highlight",
-    "slug": "Highlight",
+    "name": "notes-front",
+    "slug": "notes-front",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
