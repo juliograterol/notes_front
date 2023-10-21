@@ -3,9 +3,20 @@ import useFetch from "../hooks/useFetch";
 import useId from "../hooks/useId";
 import { API_URL } from "../config";
 import { useEffect, useState } from "react";
+import FolderModal from "./FolderModal";
 
 const NotesMenu = ({ noteId, trashed, updateNotes }) => {
   const { data, error, loading, fetchData } = useFetch(`${API_URL}/note`);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [noteIdState, setNodeIdState] = useState(noteId);
+
+  const showModal = () => {
+    setModalVisible(true);
+  };
+
+  const hideModal = () => {
+    setModalVisible(false);
+  };
   const [noteState, setNoteState] = useState({
     trashed: "true",
   });
@@ -106,11 +117,17 @@ const NotesMenu = ({ noteId, trashed, updateNotes }) => {
           >
             <Text style={styles.text}>Delete</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={console.log("hola move to...")}>
+          <TouchableOpacity onPress={showModal}>
             <Text style={styles.text}>Move to...</Text>
           </TouchableOpacity>
         </>
       )}
+      <FolderModal
+        modalVisible={modalVisible}
+        noteId={noteIdState}
+        toClose={hideModal}
+        updateNotes={updateNotes}
+      />
     </>
   );
 };

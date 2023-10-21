@@ -70,7 +70,6 @@ const Folder = ({ folderId, folderName, toClose }) => {
             <NotesMenu
               updateNotes={fetchNotes}
               trashed={note.trashed}
-              starred={note.starred}
               noteId={note._id}
             />
           }

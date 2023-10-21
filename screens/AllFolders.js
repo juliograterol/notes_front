@@ -9,17 +9,15 @@ import {
 import ButtonComponent from "../components/ButtonComponent";
 import Menu from "../components/Menu";
 import AddButton from "../components/Add";
-import Note from "../components/Note";
 import useFetch from "../hooks/useFetch";
 import useId from "../hooks/useId";
 import { API_URL } from "../config"; // Importa la variable de entorno
-import NotesMenu from "../components/NotesMenu";
 import MenuOption from "../components/MenuOption";
 import Loading from "../components/Loading";
 import Folder from "../components/Folder";
 
 const AllFolders = ({ navigation }) => {
-  const [notes, setNotes] = useState([]);
+  const [folders, setFolders] = useState([]);
   const [currentDisplay, setDisplay] = useState("Grid");
   const [openFolder, setOpenFolder] = useState(false);
   const [folderData, setFolderData] = useState({
@@ -31,7 +29,7 @@ const AllFolders = ({ navigation }) => {
     `${API_URL}/folder/getAll`
   );
 
-  async function fetchNotes() {
+  async function fetchFolders() {
     const idData = await useId();
     if (idData && idData.token) {
       const { userId, token } = idData;
@@ -41,13 +39,13 @@ const AllFolders = ({ navigation }) => {
   }
   useEffect(() => {
     if (!loading) {
-      fetchNotes();
+      fetchFolders();
     }
   }, []);
 
   useEffect(() => {
     if (data) {
-      const newNotes = data.folders.map((folder) => (
+      const newFolders = data.folders.map((folder) => (
         <ButtonComponent
           key={folder.id} // Agrega una clave única
           color={"#ffffff75"}
@@ -62,7 +60,7 @@ const AllFolders = ({ navigation }) => {
           buttonText={folder.name}
         />
       ));
-      setNotes(newNotes);
+      setFolders(newFolders);
     }
     if (error) {
       console.log(`Error: ${error}`);
@@ -102,7 +100,7 @@ const AllFolders = ({ navigation }) => {
             folderId={folderData.id}
             toClose={() => {
               setOpenFolder(false);
-              fetchNotes();
+              fetchFolders();
             }}
           />
         </>
@@ -131,7 +129,7 @@ const AllFolders = ({ navigation }) => {
           >
             <ScrollView>
               <View style={styles.container}>
-                {notes.map((note, index) => (
+                {folders.map((folder, index) => (
                   <View
                     key={index}
                     style={{
@@ -141,7 +139,7 @@ const AllFolders = ({ navigation }) => {
                       width: currentDisplay === "List" ? "100%" : "47%",
                     }}
                   >
-                    {note}
+                    {folder}
                   </View>
                 ))}
               </View>
