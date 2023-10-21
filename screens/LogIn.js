@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from "react";
+import useFetch from "../hooks/useFetch";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_URL } from "../config";
+import useId from "../hooks/useId";
 import {
   Image,
   View,
@@ -6,17 +10,84 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 
-const Login = (props) => {
+const Login = ({ navigation }) => {
   const [isVisible, setVisible] = useState(false);
+  const [isLogged, setLog] = useState(false);
+  const [user, setUser] = useState("");
+  const [flag, setFlag] = useState(false);
+  const [password, setPassword] = useState("");
+  const { data, error, loading, fetchData } = useFetch(`${API_URL}/auth/login`);
+
+  const showAlert = (title, message) => {
+    Alert.alert(title, message, [{ text: "Ok" }]);
+  };
+
+  async function UserLog(data) {
+    await AsyncStorage.setItem("jwt", data.token);
+  }
+
+  async function checkToken() {
+    try {
+      const token = await AsyncStorage.getItem("jwt");
+      if (token) {
+        setFlag(true);
+      } else {
+        setFlag(false);
+      }
+    } catch (error) {
+      console.error("Error al verificar el token:", error);
+    }
+  }
+  /*
+  useEffect(() => {
+    checkToken();
+  }, []);
+
+  useEffect(() => {
+    if(flag){
+      navigation.navigate("Todas las Notas");
+    }
+  }, [flag]);
+*/
+  useEffect(() => {
+    if (data) {
+      if (data.token) {
+        console.log(data);
+        UserLog(data);
+        setLog(true);
+        navigation.navigate("Todas las Notas");
+        showAlert("¡Bienvenido a Highlights!", "Inicio de Sesión Completo");
+      } else {
+        showAlert("¡Error!", "Datos incorrectos...");
+      }
+    }
+    if (error) {
+      console.log(error);
+      showAlert("¡Error!", "Datos incorrectos...");
+    }
+  }, [data, error]);
+
+  async function handleClick() {
+    if (!user || !password) {
+      showAlert("Advertencia", "Por favor, complete todos los campos.");
+      return;
+    }
+
+    await fetchData("POST", {
+      email: user,
+      password: password,
+    });
+  }
 
   function handleUserChange(text) {
-    props.setUser(text);
+    setUser(text);
   }
 
   function handlePasswordChange(text) {
-    props.setPassword(text);
+    setPassword(text);
   }
 
   return (
@@ -42,16 +113,13 @@ const Login = (props) => {
             <Image source={require("../assets/eye.png")} style={styles.eye} />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => props.handleClick()}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => handleClick()}>
           <Text style={{ fontWeight: "bold", color: "white", fontSize: 25 }}>
             Iniciar Sesión
           </Text>
         </TouchableOpacity>
         <View>
-          <TouchableOpacity onPress={() => props.hasAccount(false)}>
+          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
             <Text style={{ textAlign: "center" }}>
               No tengo cuenta,{" "}
               <Text style={{ textDecorationLine: "underline" }}>
