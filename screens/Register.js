@@ -1,60 +1,132 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import useFetch from "../hooks/useFetch";
+import { API_URL } from "../config";
 import {
   View,
   Text,
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Image,
 } from "react-native";
 
-const Register = () => {
+const Register = (props) => {
+  const [isVisible, setVisible] = useState(false);
+
+  const [user, setUser] = useState("");
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+
+  function handleNamesChange(text) {
+    setUserName(text);
+  }
+  function handleUserChange(text) {
+    setUser(text);
+  }
+
+  function handlePasswordChange(text) {
+    setPassword(text);
+  }
+
+  const { data, error, loading, fetchData } = useFetch(
+    `${API_URL}/auth/register`
+  );
+
+  useEffect(() => {
+    if (data) {
+      props.hasAccount(true);
+    }
+    if (error) {
+      console.log(error);
+    }
+  }, [data]);
+
+  async function handleClick() {
+    await fetchData("POST", {
+      email: user,
+      user: userName,
+      password: password,
+    });
+  }
+
   return (
-    <View style={styles.container}>
-      <View style={styles.box}>
+    <View style={styles.page}>
+      <Text style={styles.credits}>Highlight Notes</Text>
+      <View style={styles.container}>
         <Text style={styles.title}>Crear Cuenta</Text>
-        <TextInput style={styles.placeholder} placeholder="Usuario"></TextInput>
         <TextInput
           style={styles.placeholder}
-          placeholder="Contraseña"
-        ></TextInput>
-        <TouchableOpacity style={styles.button}>
-          <Text style={{ fontWeight: "bold", color: "white" }}>
+          placeholder="Nombre y Apellido"
+          onChangeText={handleNamesChange}
+        />
+        <TextInput
+          style={styles.placeholder}
+          placeholder="Email"
+          onChangeText={handleUserChange}
+        />
+        <View style={styles.placeholder}>
+          <TextInput
+            placeholder="Contraseña"
+            onChangeText={handlePasswordChange}
+            secureTextEntry={!isVisible}
+          />
+          <TouchableOpacity
+            onPress={() => setVisible(!isVisible)}
+            style={styles.eye}
+          >
+            <Image source={require("../assets/eye.png")} style={styles.eye} />
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity style={styles.button} onPress={handleClick}>
+          <Text style={{ fontWeight: "bold", color: "white", fontSize: 25 }}>
             Crear Cuenta
           </Text>
         </TouchableOpacity>
         <View>
-          <Text>Tengo cuenta,</Text>
-          <TouchableOpacity>
-            <Text> Iniciar Sesión</Text>
+          <TouchableOpacity onPress={() => props.hasAccount(true)}>
+            <Text style={{ textAlign: "center" }}>
+              Tengo cuenta,{" "}
+              <Text style={{ textDecorationLine: "underline" }}>
+                Iniciar Sesión
+              </Text>
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
+      <Text style={styles.credits}>
+        Developed by{"\n"}Julio Graterol & Victor Kneider
+      </Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  page: {
     padding: 10,
     height: "100%",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "#312D4E",
   },
-  box: {
-    borderRadius: 5,
+  container: {
     padding: 25,
+    width: "80%",
+    borderRadius: 5,
+    justifyContent: "space-between",
     backgroundColor: "#fff",
   },
   title: {
-    fontSize: 25,
+    fontSize: 40,
+    textAlign: "center",
     fontWeight: "bold",
   },
   placeholder: {
+    justifyContent: "center",
+    padding: 5,
     fontSize: 15,
-    margin: 5,
+    margin: 10,
     borderRadius: 5,
-    backgroundColor: "#a0a0a0",
+    backgroundColor: "#c0c0c0",
   },
   button: {
     margin: 5,
@@ -63,6 +135,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "black",
+  },
+  credits: {
+    margin: 50,
+    fontSize: 20,
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  eye: {
+    opacity: 0.5,
+    position: "absolute",
+    right: 0,
+    height: 20,
+    resizeMode: "contain",
   },
 });
 

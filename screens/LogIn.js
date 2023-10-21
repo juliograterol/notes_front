@@ -26,7 +26,7 @@ const Login = (props) => {
         <Text style={styles.title}>Iniciar Sesión</Text>
         <TextInput
           style={styles.placeholder}
-          placeholder="Usuario"
+          placeholder="Email"
           onChangeText={handleUserChange}
         />
         <View style={styles.placeholder}>
@@ -51,14 +51,7 @@ const Login = (props) => {
           </Text>
         </TouchableOpacity>
         <View>
-          <TouchableOpacity>
-            <Text
-              style={{ textAlign: "center", textDecorationLine: "underline" }}
-            >
-              Olvidé mi contraseña
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => props.hasAccount(false)}>
             <Text style={{ textAlign: "center" }}>
               No tengo cuenta,{" "}
               <Text style={{ textDecorationLine: "underline" }}>
@@ -99,7 +92,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 5,
     fontSize: 15,
-    margin: 5,
+    margin: 10,
     borderRadius: 5,
     backgroundColor: "#c0c0c0",
   },

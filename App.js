@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "./config"; // Importa la variable de entorno
 import { View } from "react-native";
 import Trash from "./screens/Trash";
+import Register from "./screens/Register";
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,7 @@ function App() {
 
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
+  const [account, hasAccount] = useState(false);
 
   const { data, error, loading, fetchData } = useFetch(`${API_URL}/auth/login`);
 
@@ -47,11 +49,16 @@ function App() {
   return (
     <>
       {!isLogged ? (
-        <Login
-          handleClick={handleClick}
-          setUser={setUser}
-          setPassword={setPassword}
-        />
+        account ? (
+          <Login
+            handleClick={handleClick}
+            setUser={setUser}
+            setPassword={setPassword}
+            hasAccount={hasAccount}
+          />
+        ) : (
+          <Register hasAccount={hasAccount} />
+        )
       ) : (
         <>
           <View style={{ height: 25 }} />
