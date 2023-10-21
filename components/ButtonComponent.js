@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import PopUpMenu from "./PopUpMenu";
 
 const ButtonComponent = ({
   onPress,
@@ -7,6 +8,8 @@ const ButtonComponent = ({
   buttonText,
   color,
   buttonDescription,
+  componentMenu,
+  starredNote,
 }) => {
   const styles = StyleSheet.create({
     container: {
@@ -21,19 +24,51 @@ const ButtonComponent = ({
       height: 75,
       resizeMode: "contain",
     },
+    options: {
+      height: 18,
+      resizeMode: "contain",
+    },
+    starred: {
+      height: 18,
+      resizeMode: "contain",
+      position: "absolute",
+      left: 0,
+    },
     title: {
       fontWeight: "bold",
     },
   });
 
+  const [showMenu, setShowMenu] = useState(false);
+
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image source={imageSource} style={styles.imagen} />
-      <Text style={styles.title} numberOfLines={2}>
-        {buttonText}
-      </Text>
-      <Text numberOfLines={1}>{buttonDescription}</Text>
-    </TouchableOpacity>
+    <>
+      <TouchableOpacity style={styles.container} onPress={onPress}>
+        <TouchableOpacity
+          style={{ position: "absolute", top: 10, right: 0 }}
+          onPress={() => setShowMenu(!showMenu)}
+        >
+          <Image
+            source={require("../assets/options.png")}
+            style={styles.options}
+          />
+        </TouchableOpacity>
+        <>
+          <Image source={imageSource} style={styles.imagen} />
+          {starredNote ? (
+            <Image
+              source={require("../assets/starred.png")}
+              style={styles.starred}
+            />
+          ) : null}
+        </>
+        <Text style={styles.title} numberOfLines={2}>
+          {buttonText}
+        </Text>
+        <Text numberOfLines={1}>{buttonDescription}</Text>
+      </TouchableOpacity>
+      <PopUpMenu isVisible={showMenu}>{componentMenu}</PopUpMenu>
+    </>
   );
 };
 

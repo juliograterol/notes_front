@@ -7,12 +7,12 @@ import Note from "../components/Note";
 import useFetch from "../hooks/useFetch";
 import useId from "../hooks/useId";
 import { API_URL } from "../config"; // Importa la variable de entorno
+import NotesMenu from "../components/NotesMenu";
 
 const AllNotes = ({ navigation }) => {
   const [notes, setNotes] = useState([]);
   const [currentDisplay, setDisplay] = useState("Grid");
   const [openNote, setOpenNote] = useState(false);
-
   const [noteData, setNoteData] = useState({
     title: "",
     description: "",
@@ -40,9 +40,10 @@ const AllNotes = ({ navigation }) => {
 
   useEffect(() => {
     if (data) {
-      // Mapea las notas en un nuevo array
-      const newNotes = data.notes.map((note) => (
+      const filteredNotes = data.notes.filter((note) => !note.trashed);
+      const newNotes = filteredNotes.map((note) => (
         <ButtonComponent
+          starredNote={note.starred}
           key={note.id} // Agrega una clave única
           color={note.color}
           buttonDescription={note.description}
@@ -57,6 +58,13 @@ const AllNotes = ({ navigation }) => {
           }}
           imageSource={require("../assets/Note.png")}
           buttonText={note.title}
+          componentMenu={
+            <NotesMenu
+              trashed={note.trashed}
+              starred={note.starred}
+              noteId={note._id}
+            />
+          }
         />
       ));
 
@@ -74,6 +82,7 @@ const AllNotes = ({ navigation }) => {
       title: "",
       description: "",
       color: "white",
+      id: undefined,
     });
     setOpenNote(true);
   };
