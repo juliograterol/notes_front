@@ -5,30 +5,33 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  TextInput,
 } from "react-native";
 import ButtonComponent from "../components/ButtonComponent";
-import Menu from "../components/Menu";
 import AddButton from "../components/Add";
 import Note from "../components/Note";
 import useFetch from "../hooks/useFetch";
 import useId from "../hooks/useId";
 import { API_URL } from "../config"; // Importa la variable de entorno
 import NotesMenu from "../components/NotesMenu";
-import MenuOption from "../components/MenuOption";
 import Loading from "../components/Loading";
-import Folder from "../components/Folder";
+import MenuOption from "./MenuOption";
 
-const AllFolders = ({ navigation }) => {
+const Folder = ({ folderId, folderName, toClose }) => {
   const [notes, setNotes] = useState([]);
   const [currentDisplay, setDisplay] = useState("Grid");
-  const [openFolder, setOpenFolder] = useState(false);
-  const [folderData, setFolderData] = useState({
-    name: "",
+  const [openNote, setOpenNote] = useState(false);
+  const [currentName, setCurrentName] = useState(folderName);
+  const [noteData, setNoteData] = useState({
+    title: "",
+    description: "",
+    color: "white", // Valor predeterminado para el color
+    folderId: "",
     id: "",
   });
 
   const { data, error, loading, fetchData } = useFetch(
-    `${API_URL}/folder/getAll`
+    `${API_URL}/note/getAll`
   );
 
   async function fetchNotes() {
@@ -47,21 +50,37 @@ const AllFolders = ({ navigation }) => {
 
   useEffect(() => {
     if (data) {
-      const newNotes = data.folders.map((folder) => (
+      const filteredNotes = data.notes.filter(
+        (note) => note.folderId === folderId
+      );
+      const newNotes = filteredNotes.map((note) => (
         <ButtonComponent
-          key={folder.id} // Agrega una clave única
-          color={"#ffffff75"}
+          key={note.id} // Agrega una clave única
+          color={note.color}
+          buttonDescription={note.description}
           onPress={() => {
-            setFolderData({
-              name: folder.name,
-              id: folder._id,
+            setNoteData({
+              title: note.title,
+              description: note.description,
+              color: note.color,
+              id: note._id,
             });
-            setOpenFolder(true);
+            setOpenNote(true);
           }}
-          imageSource={require("../assets/Folder.png")}
-          buttonText={folder.name}
+          imageSource={require("../assets/Note.png")}
+          buttonText={note.title}
+          componentMenu={
+            <NotesMenu
+              updateNotes={fetchNotes}
+              trashed={note.trashed}
+              starred={note.starred}
+              noteId={note._id}
+            />
+          }
         />
       ));
+
+      // Actualiza el estado de 'notes' con el nuevo array de notas
       setNotes(newNotes);
     }
     if (error) {
@@ -71,10 +90,11 @@ const AllFolders = ({ navigation }) => {
 
   // Función para agregar un elemento a la vista
   const addNote = () => {
-    setfolderData({
+    setNoteData({
       title: "",
       description: "",
       color: "white",
+      folderId: folderId,
       id: undefined,
     });
     setOpenNote(true);
@@ -95,21 +115,36 @@ const AllFolders = ({ navigation }) => {
           <Loading />
         </View>
       )}
-      {openFolder ? (
-        <>
-          <Folder
-            folderName={folderData.name}
-            folderiD={folderData.id}
-            toClose={() => {
-              setOpenFolder(false);
-              fetchNotes();
-            }}
-          />
-        </>
+      {openNote ? (
+        <Note
+          noteTitle={noteData.title}
+          noteDescription={noteData.description}
+          noteColor={noteData.color}
+          noteId={noteData.id}
+          folderId={folderId}
+          toClose={() => {
+            setOpenNote(false);
+            fetchNotes();
+          }}
+        ></Note>
       ) : (
         <>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={toClose}>
+              <Image
+                style={{ marginRight: 10 }}
+                source={require("../assets/left-arrow.png")}
+              ></Image>
+            </TouchableOpacity>
+            <TextInput
+              style={styles.title}
+              placeholder="Título"
+              onChangeText={(text) => setCurrentName(text)}
+            >
+              {currentName}
+            </TextInput>
+          </View>
           <View style={styles.barMenu}>
-            <Menu navigation={navigation} />
             <MenuOption
               onPress={changeDisplay}
               imageSource={
@@ -124,11 +159,7 @@ const AllFolders = ({ navigation }) => {
               buttonText={"Filtro"}
             />
           </View>
-          <View
-            style={{
-              alignItems: "center",
-            }}
-          >
+          <View style={{ alignItems: "center" }}>
             <ScrollView>
               <View style={styles.container}>
                 {notes.map((note, index) => (
@@ -156,6 +187,16 @@ const AllFolders = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  header: {
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    padding: 5,
+    borderBottomColor: "#00000025",
+    borderBottomWidth: 1,
+  },
+  title: {
+    fontSize: 25,
+  },
   container: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -186,4 +227,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AllFolders;
+export default Folder;

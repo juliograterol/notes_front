@@ -16,19 +16,20 @@ import { API_URL } from "../config"; // Importa la variable de entorno
 import NotesMenu from "../components/NotesMenu";
 import MenuOption from "../components/MenuOption";
 import Loading from "../components/Loading";
-import Folder from "../components/Folder";
 
-const AllFolders = ({ navigation }) => {
+const Trash = ({ navigation }) => {
   const [notes, setNotes] = useState([]);
   const [currentDisplay, setDisplay] = useState("Grid");
-  const [openFolder, setOpenFolder] = useState(false);
-  const [folderData, setFolderData] = useState({
-    name: "",
+  const [openNote, setOpenNote] = useState(false);
+  const [noteData, setNoteData] = useState({
+    title: "",
+    description: "",
+    color: "white", // Valor predeterminado para el color
     id: "",
   });
 
   const { data, error, loading, fetchData } = useFetch(
-    `${API_URL}/folder/getAll`
+    `${API_URL}/note/getAll`
   );
 
   async function fetchNotes() {
@@ -47,38 +48,32 @@ const AllFolders = ({ navigation }) => {
 
   useEffect(() => {
     if (data) {
-      const newNotes = data.folders.map((folder) => (
+      const filteredNotes = data.notes.filter((note) => note.trashed === true);
+      const newNotes = filteredNotes.map((note) => (
         <ButtonComponent
-          key={folder.id} // Agrega una clave única
-          color={"#ffffff75"}
-          onPress={() => {
-            setFolderData({
-              name: folder.name,
-              id: folder._id,
-            });
-            setOpenFolder(true);
-          }}
-          imageSource={require("../assets/Folder.png")}
-          buttonText={folder.name}
+          key={note.id} // Agrega una clave única
+          color={note.color}
+          buttonDescription={note.description}
+          imageSource={require("../assets/Note.png")}
+          buttonText={note.title}
+          componentMenu={
+            <NotesMenu
+              updateNotes={fetchNotes}
+              trashed={note.trashed}
+              starred={note.starred}
+              noteId={note._id}
+            />
+          }
         />
       ));
+
+      // Actualiza el estado de 'notes' con el nuevo array de notas
       setNotes(newNotes);
     }
     if (error) {
       console.log(`Error: ${error}`);
     }
   }, [data, error]);
-
-  // Función para agregar un elemento a la vista
-  const addNote = () => {
-    setfolderData({
-      title: "",
-      description: "",
-      color: "white",
-      id: undefined,
-    });
-    setOpenNote(true);
-  };
 
   const changeDisplay = () => {
     currentDisplay === "Grid"
@@ -95,17 +90,17 @@ const AllFolders = ({ navigation }) => {
           <Loading />
         </View>
       )}
-      {openFolder ? (
-        <>
-          <Folder
-            folderName={folderData.name}
-            folderiD={folderData.id}
-            toClose={() => {
-              setOpenFolder(false);
-              fetchNotes();
-            }}
-          />
-        </>
+      {openNote ? (
+        <Note
+          noteTitle={noteData.title}
+          noteDescription={noteData.description}
+          noteColor={noteData.color}
+          noteId={noteData.id}
+          toClose={() => {
+            setOpenNote(false);
+            fetchNotes();
+          }}
+        ></Note>
       ) : (
         <>
           <View style={styles.barMenu}>
@@ -148,7 +143,6 @@ const AllFolders = ({ navigation }) => {
               <View style={{ height: 500 }}></View>
             </ScrollView>
           </View>
-          <AddButton onPress={addNote} />
         </>
       )}
     </>
@@ -186,4 +180,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AllFolders;
+export default Trash;

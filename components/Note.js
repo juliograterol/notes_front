@@ -17,6 +17,7 @@ const Note = ({
   noteDescription = "",
   noteColor = "white",
   noteId,
+  folderId,
   toClose,
 }) => {
   const { data, error, loading, fetchData } = useFetch(`${API_URL}/note`);
@@ -25,6 +26,7 @@ const Note = ({
     title: noteTitle,
     description: noteDescription,
     color: noteColor,
+    folderId: folderId,
     id: noteId,
   });
 
@@ -72,6 +74,7 @@ const Note = ({
                   title: currentNoteData.title,
                   description: currentNoteData.description,
                   userId: idData.userId,
+                  folderId: currentNoteData.folderId,
                 },
                 idData.token
               )
@@ -82,6 +85,7 @@ const Note = ({
                   title: currentNoteData.title,
                   description: currentNoteData.description,
                   userId: idData.userId,
+                  folderId: currentNoteData.folderId,
                 },
                 idData.token
               );

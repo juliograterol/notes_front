@@ -10,6 +10,7 @@ import useFetch from "./hooks/useFetch";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "./config"; // Importa la variable de entorno
 import { View } from "react-native";
+import Trash from "./screens/Trash";
 
 const Stack = createStackNavigator();
 
@@ -62,9 +63,8 @@ function App() {
               screenOptions={{ headerShown: false }}
             >
               <Stack.Screen name="Todas las Notas" component={AllNotes} />
-              <Stack.Screen name="Nota" component={NotaPrueba} />
-              <Stack.Screen name="Carpeta1" component={FolderView} />
               <Stack.Screen name="Todas las Carpetas" component={AllFolders} />
+              <Stack.Screen name="Papelera" component={Trash} />
             </Stack.Navigator>
           </NavigationContainer>
         </>

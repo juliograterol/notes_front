@@ -48,7 +48,7 @@ function Menu({ navigation }) {
               buttonText="Todas las Carpetas"
             />
             <MenuOption
-              // onPress={() => navigation.navigate("Todas las Notas")}
+              onPress={() => navigation.navigate("Papelera")}
               imageSource={require("../assets/Trash.png")}
               buttonText="Papelera"
             />

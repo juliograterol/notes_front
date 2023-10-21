@@ -13,7 +13,7 @@ function AppNavigation() {
       <Stack.Navigator initialRouteName="PantallaPrincipal">
         <Stack.Screen name="Menu" component={PantallaPrincipal} />
         <Stack.Screen name="Todas las Notas" component={PantallaDetalle} />
-        <Stack.Screen name="Nota" component={NotaPrueba} />
+        <Stack.Screen name="Papelera" component={Trash} />
       </Stack.Navigator>
     </NavigationContainer>
   );
