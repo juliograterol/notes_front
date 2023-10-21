@@ -4,12 +4,13 @@ const PopUpMenu = ({ children, isVisible }) => {
   return (
     <View
       style={{
+        flex: 1,
         borderRadius: 5,
         padding: 5,
         backgroundColor: "#fff",
         width: "90%",
         position: "absolute",
-        top: 30,
+        top: 40,
         right: 0,
         display: isVisible ? "flex" : "none",
         shadowColor: "#000",

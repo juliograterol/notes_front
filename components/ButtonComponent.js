@@ -24,14 +24,8 @@ const ButtonComponent = ({
       resizeMode: "contain",
     },
     options: {
-      height: 18,
+      height: 25,
       resizeMode: "contain",
-    },
-    starred: {
-      height: 18,
-      resizeMode: "contain",
-      position: "absolute",
-      left: 0,
     },
     title: {
       fontWeight: "bold",

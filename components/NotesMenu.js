@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, Alert } from "react-native";
+import { Text, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import useFetch from "../hooks/useFetch";
 import useId from "../hooks/useId";
 import { API_URL } from "../config";
@@ -74,7 +74,7 @@ const NotesMenu = ({ noteId, trashed, updateNotes }) => {
             )
           }
         >
-          <Text>Delete Forever</Text>
+          <Text style={styles.text}>Delete Forever</Text>
         </TouchableOpacity>
       ) : (
         <>
@@ -104,15 +104,20 @@ const NotesMenu = ({ noteId, trashed, updateNotes }) => {
               )
             }
           >
-            <Text>Delete</Text>
+            <Text style={styles.text}>Delete</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={console.log("hola move to...")}>
-            <Text>Move to...</Text>
+            <Text style={styles.text}>Move to...</Text>
           </TouchableOpacity>
         </>
       )}
     </>
   );
 };
+const styles = StyleSheet.create({
+  text: {
+    fontSize: 20,
+  },
+});
 
 export default NotesMenu;
