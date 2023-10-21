@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 
 const Register = (props) => {
@@ -16,6 +17,7 @@ const Register = (props) => {
   const [user, setUser] = useState("");
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [registered, setRegistered] = useState(false);
 
   function handleNamesChange(text) {
     setUserName(text);
@@ -34,7 +36,12 @@ const Register = (props) => {
 
   useEffect(() => {
     if (data) {
-      props.hasAccount(true);
+      Alert.alert("Cuenta Creada", "Ahora inicia sesión", [
+        {
+          text: "Ok",
+          onPress: () => props.hasAccount(true),
+        },
+      ]);
     }
     if (error) {
       console.log(error);
@@ -43,9 +50,9 @@ const Register = (props) => {
 
   async function handleClick() {
     await fetchData("POST", {
-      email: user,
-      user: userName,
-      password: password,
+      email: user.trim(),
+      username: userName.trim(),
+      password: password.trim(),
     });
   }
 

@@ -8,6 +8,7 @@ import {
   Image,
 } from "react-native";
 import MenuOption from "./MenuOption";
+import CloseButton from "./Close";
 
 function Menu({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -29,7 +30,7 @@ function Menu({ navigation }) {
         ></Image>
       </TouchableOpacity>
       <View>
-        <Modal visible={modalVisible} transparent animationType="slide">
+        <Modal visible={modalVisible} transparent animationType="fade">
           <View style={styles.modalContainer}>
             <MenuOption
               onPress={() => {
@@ -52,9 +53,12 @@ function Menu({ navigation }) {
               imageSource={require("../assets/Trash.png")}
               buttonText="Papelera"
             />
-            <TouchableOpacity onPress={hideModal}>
-              <Text style={styles.closeButton}>Cerrar</Text>
-            </TouchableOpacity>
+            <MenuOption
+              onPress={() => navigation.navigate("Cuenta")}
+              imageSource={require("../assets/user.png")}
+              buttonText="Cuenta"
+            />
+            <CloseButton onPress={hideModal} />
           </View>
         </Modal>
       </View>
@@ -69,10 +73,15 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
+    width: "75%",
     justifyContent: "center",
     alignItems: "flex-start",
-    backgroundColor: "#a0a0a0",
+    backgroundColor: "#e1e1e1",
     color: "white",
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowRadius: 50,
+    elevation: 50,
   },
   closeButton: {
     marginTop: 20,

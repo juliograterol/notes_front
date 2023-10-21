@@ -20,7 +20,7 @@ const MenuOption = ({ onPress, imageSource, buttonText }) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <Image source={imageSource} style={styles.imagen} />
-      <Text>{buttonText}</Text>
+      <Text style={{ fontSize: 25 }}>{buttonText}</Text>
     </TouchableOpacity>
   );
 };

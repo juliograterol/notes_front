@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import ButtonComponent from "../components/ButtonComponent";
 import Menu from "../components/Menu";
-import AddButton from "../components/Add";
 import Note from "../components/Note";
 import useFetch from "../hooks/useFetch";
 import useId from "../hooks/useId";

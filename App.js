@@ -7,9 +7,10 @@ import Login from "./screens/LogIn";
 import useFetch from "./hooks/useFetch";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "./config"; // Importa la variable de entorno
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import Trash from "./screens/Trash";
 import Register from "./screens/Register";
+import User from "./screens/User";
 
 const Stack = createStackNavigator();
 
@@ -18,7 +19,7 @@ function App() {
 
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
-  const [account, hasAccount] = useState(false);
+  const [account, hasAccount] = useState(true);
 
   const { data, error, loading, fetchData } = useFetch(`${API_URL}/auth/login`);
 
@@ -31,13 +32,23 @@ function App() {
       UserLog(data);
       setLog(true);
       if (isLogged) {
-        navigation.navigate("Todas las Notas");
+        Alert.alert("Inicio de Sesión Completo", "Bienvenido a Highlights!", [
+          {
+            text: "Ok",
+            onPress: navigation.navigate("Todas las Notas"),
+          },
+        ]);
       }
     }
     if (error) {
       console.log(error);
+      Alert.alert("Error!", "Datos incorrectos...", [
+        {
+          text: "Ok",
+        },
+      ]);
     }
-  }, [data]);
+  }, [data, error]);
 
   async function handleClick() {
     await fetchData("POST", {
@@ -70,6 +81,7 @@ function App() {
               <Stack.Screen name="Todas las Notas" component={AllNotes} />
               <Stack.Screen name="Todas las Carpetas" component={AllFolders} />
               <Stack.Screen name="Papelera" component={Trash} />
+              <Stack.Screen name="Cuenta" component={User} />
             </Stack.Navigator>
           </NavigationContainer>
         </>
