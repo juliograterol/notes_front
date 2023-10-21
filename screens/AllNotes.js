@@ -123,8 +123,8 @@ const AllNotes = ({ navigation }) => {
         ></Note>
       ) : (
         <>
-          <Menu navigation={navigation} />
           <View style={styles.barMenu}>
+            <Menu navigation={navigation} />
             <MenuOption
               onPress={changeDisplay}
               imageSource={
@@ -151,6 +151,8 @@ const AllNotes = ({ navigation }) => {
                     key={index}
                     style={{
                       margin: currentDisplay === "List" ? 0 : 5,
+                      marginTop: currentDisplay === "List" ? 5 : 5,
+                      marginBottom: currentDisplay === "List" ? 5 : 5,
                       width: currentDisplay === "List" ? "100%" : "47%",
                     }}
                   >
@@ -179,9 +181,10 @@ const styles = StyleSheet.create({
   },
   barMenu: {
     flexDirection: "row",
-    borderRadius: 5,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    backgroundColor: "#fff",
+    color: "white",
   },
   loading: {
     flex: 1,
