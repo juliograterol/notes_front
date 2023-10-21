@@ -9,6 +9,7 @@ import Login from "./screens/LogIn";
 import useFetch from "./hooks/useFetch";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "./config"; // Importa la variable de entorno
+import { View } from "react-native";
 
 const Stack = createStackNavigator();
 
@@ -27,7 +28,6 @@ function App() {
   useEffect(() => {
     if (data) {
       UserLog(data);
-      console.log(data);
       setLog(true);
       if (isLogged) {
         navigation.navigate("Todas las Notas");
@@ -54,19 +54,20 @@ function App() {
           setPassword={setPassword}
         />
       ) : (
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="Todas las Notas"
-            screenOptions={{
-              headerTitleStyle: { color: "transparent", fontSize: 0 },
-            }}
-          >
-            <Stack.Screen name="Todas las Notas" component={AllNotes} />
-            <Stack.Screen name="Nota" component={NotaPrueba} />
-            <Stack.Screen name="Carpeta1" component={FolderView} />
-            <Stack.Screen name="Todas las Carpetas" component={AllFolders} />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <>
+          <View style={{ height: 25 }} />
+          <NavigationContainer>
+            <Stack.Navigator
+              initialRouteName="Todas las Notas"
+              screenOptions={{ headerShown: false }}
+            >
+              <Stack.Screen name="Todas las Notas" component={AllNotes} />
+              <Stack.Screen name="Nota" component={NotaPrueba} />
+              <Stack.Screen name="Carpeta1" component={FolderView} />
+              <Stack.Screen name="Todas las Carpetas" component={AllFolders} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </>
       )}
     </>
   );

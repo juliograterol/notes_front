@@ -1,10 +1,10 @@
-import { Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, Alert } from "react-native";
 import useFetch from "../hooks/useFetch";
 import useId from "../hooks/useId";
 import { API_URL } from "../config";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const NotesMenu = ({ noteId, trashed, starred }) => {
+const NotesMenu = ({ noteId, trashed, starred, updateNotes }) => {
   const { data, error, loading, fetchData } = useFetch(`${API_URL}/note`);
   const [noteState, setNoteState] = useState({
     starred: "true",
@@ -68,18 +68,89 @@ const NotesMenu = ({ noteId, trashed, starred }) => {
   return (
     <>
       {trashed ? (
-        <TouchableOpacity onPress={TrashNote}>
+        <TouchableOpacity
+          onPress={() =>
+            Alert.alert(
+              "¿Deseas eliminar definitivamente esta nota?",
+              "Esta nota no podra recuperarse.",
+              [
+                {
+                  text: "Cancelar",
+                  style: "cancel",
+                },
+                {
+                  text: "Eliminar",
+                  onPress: () => {
+                    DeleteNote();
+                    Alert.alert("Nota eliminada definitivamente!", "", [
+                      {
+                        text: "OK",
+                        onPress: updateNotes,
+                      },
+                    ]);
+                  },
+                },
+              ]
+            )
+          }
+        >
           <Text>Delete Forever</Text>
         </TouchableOpacity>
       ) : (
         <>
-          <TouchableOpacity onPress={TrashNote}>
+          <TouchableOpacity
+            onPress={() =>
+              Alert.alert(
+                "¿Deseas borrar esta nota?",
+                "Esta nota se ira a la papelera por si quieres recuperarla.",
+                [
+                  {
+                    text: "Cancelar",
+                    style: "cancel",
+                  },
+                  {
+                    text: "Borrar",
+                    onPress: () => {
+                      TrashNote();
+                      Alert.alert("Nota eliminada con exito!", "", [
+                        {
+                          text: "OK",
+                          onPress: updateNotes,
+                        },
+                      ]);
+                    },
+                  },
+                ]
+              )
+            }
+          >
             <Text>Delete</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={StarNote}>
+          <TouchableOpacity
+            onPress={() => {
+              Alert.alert("¿Deseas poner en favoritos esta nota?", "", [
+                {
+                  text: "Cancelar",
+                  style: "cancel",
+                },
+                {
+                  text: "Aceptar",
+                  onPress: () => {
+                    StarNote();
+                    Alert.alert("Nota Favorita!", "", [
+                      {
+                        text: "OK",
+                        onPress: updateNotes,
+                      },
+                    ]);
+                  },
+                },
+              ]);
+            }}
+          >
             {starred ? <Text>Remove Star</Text> : <Text>Star</Text>}
           </TouchableOpacity>
-          <TouchableOpacity onPress={DeleteNote}>
+          <TouchableOpacity onPress={console.log("hola move to...")}>
             <Text>Move to...</Text>
           </TouchableOpacity>
         </>

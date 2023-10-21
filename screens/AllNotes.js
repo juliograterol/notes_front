@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import ButtonComponent from "../components/ButtonComponent";
 import Menu from "../components/Menu";
 import AddButton from "../components/Add";
@@ -8,11 +8,14 @@ import useFetch from "../hooks/useFetch";
 import useId from "../hooks/useId";
 import { API_URL } from "../config"; // Importa la variable de entorno
 import NotesMenu from "../components/NotesMenu";
+import MenuOption from "../components/MenuOption";
+import Loading from "../components/Loading";
 
 const AllNotes = ({ navigation }) => {
   const [notes, setNotes] = useState([]);
   const [currentDisplay, setDisplay] = useState("Grid");
   const [openNote, setOpenNote] = useState(false);
+  const [refresh, setRefresh] = useState(true);
   const [noteData, setNoteData] = useState({
     title: "",
     description: "",
@@ -36,7 +39,7 @@ const AllNotes = ({ navigation }) => {
     if (!loading) {
       fetchNotes();
     }
-  }, []);
+  }, [refresh]);
 
   useEffect(() => {
     if (data) {
@@ -60,6 +63,7 @@ const AllNotes = ({ navigation }) => {
           buttonText={note.title}
           componentMenu={
             <NotesMenu
+              updateNotes={fetchNotes}
               trashed={note.trashed}
               starred={note.starred}
               noteId={note._id}
@@ -97,6 +101,11 @@ const AllNotes = ({ navigation }) => {
 
   return (
     <>
+      {loading && (
+        <View style={styles.loading}>
+          <Loading />
+        </View>
+      )}
       {openNote ? (
         <Note
           noteTitle={noteData.title}
@@ -111,12 +120,21 @@ const AllNotes = ({ navigation }) => {
       ) : (
         <>
           <Menu navigation={navigation} />
-          <TouchableOpacity
-            style={{ position: "absolute", right: 5 }}
-            onPress={changeDisplay}
-          >
-            <Text style={{ fontSize: 30 }}>View {currentDisplay}</Text>
-          </TouchableOpacity>
+          <View style={styles.barMenu}>
+            <MenuOption
+              onPress={changeDisplay}
+              imageSource={
+                currentDisplay === "List"
+                  ? require("../assets/List.png")
+                  : require("../assets/Grid.png")
+              }
+              buttonText={`View ${currentDisplay}`}
+            />
+            <MenuOption
+              imageSource={require("../assets/filter.png")}
+              buttonText={"Filtro"}
+            />
+          </View>
           <View
             style={{
               alignItems: "center",
@@ -128,8 +146,8 @@ const AllNotes = ({ navigation }) => {
                 <View
                   key={index}
                   style={{
-                    margin: 5,
-                    width: currentDisplay === "List" ? "98%" : "30%",
+                    margin: currentDisplay === "List" ? 0 : 5,
+                    width: currentDisplay === "List" ? "100%" : "47%",
                   }}
                 >
                   {note}
@@ -146,12 +164,32 @@ const AllNotes = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
     flexDirection: "row",
     flexWrap: "wrap",
-    padding: 10,
+    paddingLeft: 5,
+    paddingRight: 5,
     borderRadius: 5,
     alignItems: "flex-start",
+  },
+  barMenu: {
+    flexDirection: "row",
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loading: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "grey",
+    zIndex: 100,
+    position: "absolute",
+    zIndex: 100,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 350,
+    pointerEvents: "none",
   },
 });
 
