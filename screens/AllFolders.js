@@ -15,6 +15,7 @@ import { API_URL } from "../config"; // Importa la variable de entorno
 import MenuOption from "../components/MenuOption";
 import Loading from "../components/Loading";
 import Folder from "../components/Folder";
+import SaveButton from "../components/Save";
 
 const AllFolders = ({ navigation }) => {
   const [folders, setFolders] = useState([]);
@@ -47,7 +48,7 @@ const AllFolders = ({ navigation }) => {
     if (data) {
       const newFolders = data.folders.map((folder) => (
         <ButtonComponent
-          key={folder.id} // Agrega una clave única
+          key={folder._id} // Agrega una clave única
           color={"#ffffff75"}
           onPress={() => {
             setFolderData({
@@ -67,15 +68,12 @@ const AllFolders = ({ navigation }) => {
     }
   }, [data, error]);
 
-  // Función para agregar un elemento a la vista
-  const addNote = () => {
-    setfolderData({
-      title: "",
-      description: "",
-      color: "white",
+  const addFolder = () => {
+    setFolderData({
+      name: "",
       id: undefined,
     });
-    setOpenNote(true);
+    setOpenFolder(true);
   };
 
   const changeDisplay = () => {
@@ -136,13 +134,13 @@ const AllFolders = ({ navigation }) => {
                       margin:
                         currentDisplay === "List"
                           ? 0
-                          : notes.length > 1
+                          : folder.length > 1
                           ? 5
                           : 0,
                       marginTop: currentDisplay === "List" ? 5 : 5,
                       marginBottom: currentDisplay === "List" ? 5 : 5,
                       width:
-                        notes.length > 1
+                        folder.length > 1
                           ? currentDisplay === "List"
                             ? "100%"
                             : "47%"
@@ -156,7 +154,7 @@ const AllFolders = ({ navigation }) => {
               <View style={{ height: 500 }}></View>
             </ScrollView>
           </View>
-          <AddButton onPress={addNote} />
+          <AddButton onPress={addFolder} />
         </>
       )}
     </>

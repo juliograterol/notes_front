@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  Alert,
 } from "react-native";
 import ButtonComponent from "../components/ButtonComponent";
 import AddButton from "../components/Add";
@@ -16,23 +17,29 @@ import { API_URL } from "../config"; // Importa la variable de entorno
 import NotesMenu from "../components/NotesMenu";
 import Loading from "../components/Loading";
 import MenuOption from "./MenuOption";
+import SaveButton from "../components/Save";
+import useFetch2 from "../hooks/useFetch2";
 
 const Folder = ({ folderId, folderName, toClose }) => {
   const [notes, setNotes] = useState([]);
   const [currentDisplay, setDisplay] = useState("Grid");
   const [openNote, setOpenNote] = useState(false);
   const [currentName, setCurrentName] = useState(folderName);
-  const [noteData, setNoteData] = useState({
-    title: "",
-    description: "",
-    color: "white", // Valor predeterminado para el color
-    folderId: "",
+  const [folderData, setFolderData] = useState({
+    name: "",
     id: "",
   });
 
   const { data, error, loading, fetchData } = useFetch(
     `${API_URL}/note/getByFolderId`
   );
+
+  const {
+    data: data2,
+    error: error2,
+    loading: loading2,
+    fetchData: fetchData2,
+  } = useFetch2(`${API_URL}/folder/`);
 
   async function fetchNotes() {
     const idData = await useId();
@@ -52,11 +59,11 @@ const Folder = ({ folderId, folderName, toClose }) => {
     if (data) {
       const newNotes = data.notes.map((note) => (
         <ButtonComponent
-          key={note.id} // Agrega una clave única
+          key={note._id} // Agrega una clave única
           color={note.color}
           buttonDescription={note.description}
           onPress={() => {
-            setNoteData({
+            setFolderData({
               title: note.title,
               description: note.description,
               color: note.color,
@@ -83,16 +90,58 @@ const Folder = ({ folderId, folderName, toClose }) => {
   }, [data, error]);
 
   // Función para agregar un elemento a la vista
-  const addNote = () => {
-    setNoteData({
-      title: "",
-      description: "",
-      color: "white",
+  const addFolder = () => {
+    setFolderData({
+      note: "",
       folderId: folderId,
       id: undefined,
     });
     setOpenNote(true);
   };
+
+  async function saveFolder() {
+    if (!loading) {
+      Alert.alert("Cambios guardados", "", [
+        {
+          text: "Aceptar",
+        },
+      ]);
+      const idData = await useId();
+      if (!currentName) {
+        Alert.alert(
+          "Datos incompletos",
+          "Las carpetas deben tener nombre para guardarse",
+          [
+            {
+              text: "Aceptar",
+            },
+          ]
+        );
+        return;
+      } else {
+        if (idData && idData.token) {
+          folderId === undefined
+            ? await fetchData2(
+                "POST",
+                {
+                  name: currentName,
+                  userId: idData.userId,
+                },
+                idData.token
+              )
+            : await fetchData2(
+                "PUT",
+                {
+                  name: currentName,
+                  userId: idData.userId,
+                  folderId: folderId,
+                },
+                idData.token
+              );
+        }
+      }
+    }
+  }
 
   const changeDisplay = () => {
     currentDisplay === "Grid"
@@ -111,10 +160,10 @@ const Folder = ({ folderId, folderName, toClose }) => {
       )}
       {openNote ? (
         <Note
-          noteTitle={noteData.title}
-          noteDescription={noteData.description}
-          noteColor={noteData.color}
-          noteId={noteData.id}
+          noteTitle={folderData.title}
+          noteDescription={folderData.description}
+          noteColor={folderData.color}
+          noteId={folderData.id}
           folderId={folderId}
           toClose={() => {
             setOpenNote(false);
@@ -183,7 +232,8 @@ const Folder = ({ folderId, folderName, toClose }) => {
               <View style={{ height: 500 }}></View>
             </ScrollView>
           </View>
-          <AddButton onPress={addNote} />
+          <SaveButton onPress={saveFolder} left={15} />
+          <AddButton onPress={addFolder} />
         </>
       )}
     </>

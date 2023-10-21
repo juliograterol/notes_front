@@ -232,7 +232,7 @@ const Note = ({
       >
         {currentNoteData.description}
       </TextInput>
-      <SaveButton onPress={Alerta} />
+      <SaveButton onPress={Alerta} right={15} />
     </View>
   );
 };
