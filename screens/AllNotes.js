@@ -15,7 +15,6 @@ const AllNotes = ({ navigation }) => {
   const [notes, setNotes] = useState([]);
   const [currentDisplay, setDisplay] = useState("Grid");
   const [openNote, setOpenNote] = useState(false);
-  const [refresh, setRefresh] = useState(true);
   const [noteData, setNoteData] = useState({
     title: "",
     description: "",
@@ -39,7 +38,7 @@ const AllNotes = ({ navigation }) => {
     if (!loading) {
       fetchNotes();
     }
-  }, [refresh]);
+  }, []);
 
   useEffect(() => {
     if (data) {
