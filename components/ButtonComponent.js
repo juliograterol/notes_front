@@ -16,7 +16,7 @@ const ButtonComponent = ({
       borderRadius: 5,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: color,
+      backgroundColor: color === "white" ? "#f1f1f1" : color,
     },
     imagen: {
       width: 75,
